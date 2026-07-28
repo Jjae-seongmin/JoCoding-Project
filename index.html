@@ -17,19 +17,33 @@
     margin: 0;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     background: radial-gradient(circle at top, #1c2140, #0b0d18 70%);
     font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     color: var(--text);
     padding: 24px;
   }
-  .app {
+  .page {
     width: 100%;
     max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin: auto 0;
+  }
+  .app {
+    width: 100%;
     background: var(--card);
     border-radius: 20px;
     padding: 32px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+  .comments-card {
+    width: 100%;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px 20px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.45);
   }
   h1 {
@@ -153,6 +167,7 @@
 </style>
 </head>
 <body>
+  <div class="page">
   <div class="app">
     <h1>🎱 로또 번호 생성기</h1>
     <p class="sub">1~45 중 서로 다른 6개 번호를 무작위로 뽑아드려요</p>
@@ -174,6 +189,24 @@
     </div>
 
     <a href="contact.html" style="display:block; margin-top:20px; text-align:center; font-size:13px; color:var(--muted); text-decoration:none;">🤝 제휴 문의하기</a>
+  </div>
+
+  <div class="comments-card">
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function () {
+        this.page.url = window.location.href;
+        this.page.identifier = 'lotto-index';
+        };
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://jjaeseongmin.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
   </div>
 
   <script>
