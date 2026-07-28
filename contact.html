@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제휴 문의</title>
+<style>
+  :root {
+    --bg: #0f1220;
+    --card: #1a1e33;
+    --text: #f5f6fa;
+    --muted: #9a9fbf;
+    --accent: #6c7cff;
+    --field: #262b4a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top, #1c2140, #0b0d18 70%);
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    color: var(--text);
+    padding: 24px;
+  }
+  .app {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+  h1 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    text-align: center;
+  }
+  p.sub {
+    margin: 0 0 28px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  label {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  input, textarea {
+    font-family: inherit;
+    font-size: 15px;
+    border-radius: 10px;
+    border: none;
+    padding: 12px 14px;
+    background: var(--field);
+    color: var(--text);
+    resize: vertical;
+  }
+  input:focus, textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  textarea { min-height: 120px; }
+
+  button {
+    margin-top: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  button:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(108,124,255,0.4); }
+  button:active { transform: translateY(0); }
+  button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .status {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 14px;
+    display: none;
+  }
+  .status.success { display: block; color: #7be495; }
+  .status.error { display: block; color: #ff7272; }
+
+  .back {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .back:hover { color: var(--accent); }
+
+  @media (prefers-color-scheme: light) {
+    body { background: radial-gradient(circle at top, #eef0ff, #f7f8fc 70%); }
+    :root {
+      --bg: #f7f8fc;
+      --card: #ffffff;
+      --text: #1a1e33;
+      --muted: #6b7099;
+      --field: #eef0f8;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <h1>🤝 제휴 문의</h1>
+    <p class="sub">제휴/협업 관련 문의를 남겨주시면 빠르게 답변드릴게요</p>
+
+    <form id="contact-form" action="https://formspree.io/f/xpqvbplk" method="POST">
+      <div class="field">
+        <label for="name">이름 / 회사명</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+
+      <div class="field">
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="field">
+        <label for="message">문의 내용</label>
+        <textarea id="message" name="message" required placeholder="제휴 목적과 내용을 자유롭게 작성해주세요"></textarea>
+      </div>
+
+      <input type="text" name="_gotcha" style="display:none">
+      <input type="hidden" name="_subject" value="새로운 제휴 문의">
+
+      <button type="submit" id="submit-btn">문의 보내기</button>
+    </form>
+
+    <p id="status" class="status"></p>
+    <a class="back" href="index.html">← 로또 번호 생성기로 돌아가기</a>
+  </div>
+
+  <script>
+    const form = document.getElementById('contact-form');
+    const statusEl = document.getElementById('status');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      statusEl.className = 'status';
+      statusEl.textContent = '';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          statusEl.textContent = '문의가 전송되었습니다. 감사합니다!';
+          statusEl.className = 'status success';
+          form.reset();
+        } else {
+          statusEl.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해주세요.';
+          statusEl.className = 'status error';
+        }
+      } catch (err) {
+        statusEl.textContent = '전송 중 오류가 발생했습니다. 네트워크를 확인해주세요.';
+        statusEl.className = 'status error';
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
